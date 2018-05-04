@@ -5,16 +5,19 @@ from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 import os
 
-img_width, img_height = 150,150
+img_width, img_height = 224,224
 
-train_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/preliminary_test/Training'
-validation_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/preliminary_test/Validation'
-save_training_features_path ='/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/bottleneck_features_train_1.npy'
-save_validation_features_path = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project//bottleneck_features_validation_1.npy'
+train_data_dir = '/Data/Training/'
 
-nb_train_samples = 2136 + 2134 + 2128 + 2132 
-nb_validation_samples = 534 + 531 + 533 + 533
-top_model_weights_path = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/top_model.npy'
+validation_data_dir = 'Data/Validation/'
+
+save_training_features_path ='features_train.npy'
+
+save_validation_features_path = 'features_validation.npy'
+
+nb_train_samples = 7015 + 3548 + 7390 + 4723 + 8599 
+nb_validation_samples = 1753 + 880 + 1847 + 1180 + 2149
+top_model_weights_path = 'top_model.npy'
 subfolder_list = []
 train_subfolder_num = []
 validation_subfolder_num = []
@@ -56,17 +59,17 @@ np.save(open(save_validation_features_path, 'wb'),bottleneck_features_validation
 #Now we will train the top_model CNN to classify
 
 train_data = np.load(open(save_training_features_path,'rb'))
-train_labels = np.array([0]*2136 + [1]*2134 + [2]*2128 + [3]*2130 ) #automate this, making the labels, last wala 2132 hona chaiye, abhi temporarily change kiya hai    
+train_labels = np.array([0]*7015 + [1]*3548 + [2]*7390 + [3]*4723 + [4]*8599 ) #automate this, making the labels, last wala 2132 hona chaiye, abhi temporarily change kiya hai    
 
 validation_data = np.load(open(save_validation_features_path,'rb'))
-validation_labels = np.array([0] *534 + [1] *531 +[2]*533 + [3]*530) #automate this changed last waala 533 to 530 which is wrong
+validation_labels = np.array([0] *1753 + [1]*880 +[2]*1847 + [3]*1180 + [4]*2149) #automate this changed last waala 533 to 530 which is wrong
 
 #creating the top CNN for classification - architecture of CNN
 top_model = Sequential()
 top_model.add(Flatten(input_shape=train_data.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
 top_model.add(Dropout(0.5))
-top_model.add(Dense(4, activation='softmax'))
+top_model.add(Dense(5, activation='softmax'))
 top_model.compile(optimizer='rmsprop',loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 #training the top model 
