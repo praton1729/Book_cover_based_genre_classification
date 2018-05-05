@@ -6,37 +6,13 @@ from keras import applications
 import os
 
 img_width, img_height = 150,150
-
 train_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Train'
-
 validation_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Validation/'
-
 save_training_features_path ='features_train.npy'
-
 save_validation_features_path = 'features_validation.npy'
-
-nb_train_samples = 3000
-nb_validation_samples = 400
+nb_train_samples = 20000    
+nb_validation_samples = 5000
 top_model_weights_path = 'top_model.h5'
-subfolder_list = []
-train_subfolder_num = []
-validation_subfolder_num = []
-
-#for temp in os.listdir(train_data_dir):
-#	subfolder_list.append(temp)
-
-#for subfolder_temp in subfolder_list:								#calculating the no of training samples
-#	temp_path = train_data_dir + '/' + subfolder_temp
-#	train_subfolder_num.append(len(os.listdir(temp_path)))
-#	nb_train_samples = nb_train_samples + len(os.listdir(temp_path))
-#	
-#for subfolder_temp in subfolder_list:
-
-#	temp_path = validation_data_dir + '/' + subfolder_temp
-#	validation_subfolder_num.append(len(os.listdir(temp_path)))
-#	nb_validation_samples = nb_train_samples + len(os.listdir(temp_path))	 
-#	
-
 epochs = 30 							#no of training iteration through top level neural network 
 batch_size = 8
 
@@ -59,10 +35,10 @@ np.save(open(save_validation_features_path, 'wb'),bottleneck_features_validation
 #Now we will train the top_model CNN to classify
 
 train_data = np.load(open(save_training_features_path,'rb'))
-train_labels = np.array([0]*600 + [1]*600 + [2]*600 + [3]*600 + [4]*598 ) #automate this, making the labels, last wala 2132 hona chaiye, abhi temporarily change kiya hai    
+train_labels = np.array([0]*4000 + [1]*4000 + [2]*4000 + [3]*4000 + [4]*4000 )   
 
 validation_data = np.load(open(save_validation_features_path,'rb'))
-validation_labels = np.array([0]*80 + [1]*80 +[2]*80 + [3]*80 + [4]*80) #automate this changed last waala 533 to 530 which is wrong
+validation_labels = np.array([0]*1000 + [1]*1000 +[2]*1000 + [3]*1000 + [4]*1000)
 
 #creating the top CNN for classification - architecture of CNN
 top_model = Sequential()
