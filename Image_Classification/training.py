@@ -5,19 +5,19 @@ from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 import os
 
-img_width, img_height = 224,224
+img_width, img_height = 150,150
 
-train_data_dir = '/Data/Training/'
+train_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Train'
 
-validation_data_dir = 'Data/Validation/'
+validation_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Validation/'
 
 save_training_features_path ='features_train.npy'
 
 save_validation_features_path = 'features_validation.npy'
 
-nb_train_samples = 7015 + 3548 + 7390 + 4723 + 8599 
-nb_validation_samples = 1753 + 880 + 1847 + 1180 + 2149
-top_model_weights_path = 'top_model.npy'
+nb_train_samples = 3000
+nb_validation_samples = 400
+top_model_weights_path = 'top_model.h5'
 subfolder_list = []
 train_subfolder_num = []
 validation_subfolder_num = []
@@ -37,8 +37,8 @@ validation_subfolder_num = []
 #	nb_validation_samples = nb_train_samples + len(os.listdir(temp_path))	 
 #	
 
-epochs = 35 							#no of training iteration through top level neural network 
-batch_size = 16
+epochs = 30 							#no of training iteration through top level neural network 
+batch_size = 8
 
 datagen = ImageDataGenerator(rescale=1. / 255)							#starting the imagedatagenerator and normalizing the pixel values
 
@@ -47,7 +47,7 @@ vgg_model = applications.VGG16(include_top=False, weights='imagenet')	#loading i
 #Extract features from training data and store them
 generator = datagen.flow_from_directory(train_data_dir,target_size=(img_width, img_height),batch_size=batch_size,class_mode=None,shuffle=False)#load images
 
-bottleneck_features_train = vgg_model.predict_generator(generator, (nb_train_samples // batch_size) ) #extracting the features
+bottleneck_features_train = vgg_model.predict_generator(generator, ((nb_train_samples // batch_size) )) #extracting the features
 np.save(open(save_training_features_path, 'wb'),bottleneck_features_train)							   #saving the features
 
 #Extract features from validation and store them
@@ -59,10 +59,10 @@ np.save(open(save_validation_features_path, 'wb'),bottleneck_features_validation
 #Now we will train the top_model CNN to classify
 
 train_data = np.load(open(save_training_features_path,'rb'))
-train_labels = np.array([0]*7015 + [1]*3548 + [2]*7390 + [3]*4723 + [4]*8599 ) #automate this, making the labels, last wala 2132 hona chaiye, abhi temporarily change kiya hai    
+train_labels = np.array([0]*600 + [1]*600 + [2]*600 + [3]*600 + [4]*598 ) #automate this, making the labels, last wala 2132 hona chaiye, abhi temporarily change kiya hai    
 
 validation_data = np.load(open(save_validation_features_path,'rb'))
-validation_labels = np.array([0] *1753 + [1]*880 +[2]*1847 + [3]*1180 + [4]*2149) #automate this changed last waala 533 to 530 which is wrong
+validation_labels = np.array([0]*80 + [1]*80 +[2]*80 + [3]*80 + [4]*80) #automate this changed last waala 533 to 530 which is wrong
 
 #creating the top CNN for classification - architecture of CNN
 top_model = Sequential()
