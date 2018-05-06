@@ -7,23 +7,26 @@ from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 from keras.preprocessing import image
 
+#This code outputs predictions for all the images present in the folder "directory_in_str"
+
+
 img_width, img_height = 150, 150
 
-top_model_weights_path = '/home/sherlock31/Desktop/winter/bottleneck_fc_model_3.h5'
 train_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Train'
 validation_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Validation'
-
 
 train_data = np.load(('features_train.npy'))
 top_model = Sequential()
 top_model.add(Flatten(input_shape=train_data.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
 top_model.add(Dropout(0.5))
+top_model.add(Dense(128, activation='relu'))
+top_model.add(Dropout(0.5))
 top_model.add(Dense(5, activation='softmax'))
 
 top_model.load_weights('top_model.h5')
 
-directory_in_str = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Demo_Data'
+directory_in_str = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Demo_Data'	#Test Folder 
 directory = os.fsencode(directory_in_str)
 vgg_model = applications.VGG16(include_top=False, weights='imagenet')
 
@@ -35,4 +38,17 @@ for file in os.listdir(directory):
 	x = np.expand_dims(x, axis=0)
 	x = x*(1/255.0)
 	features = vgg_model.predict(x)
-	print(top_model.predict_classes(features))
+	temp = top_model.predict_classes(features)
+
+	if(temp == [0]):
+		temp2 = "Food"
+	if(temp == [1]):
+		temp2 = "Romance"
+	if(temp == [2]):
+		temp2 = "Science"
+	if(temp == [3]):
+		temp2 = "Sports"
+	if(temp == [4]):
+		temp2 = "Travel"
+
+	print(temp2)

@@ -40,7 +40,7 @@ train_labels = np.array([0]*4000 + [1]*4000 + [2]*4000 + [3]*4000 + [4]*4000 )
 validation_data = np.load(open(save_validation_features_path,'rb'))
 validation_labels = np.array([0]*1000 + [1]*1000 +[2]*1000 + [3]*1000 + [4]*1000)
 
-#creating the top CNN for classification - architecture of CNN
+#creating the top NN for classification - architecture of NN
 top_model = Sequential()
 top_model.add(Flatten(input_shape=train_data.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
