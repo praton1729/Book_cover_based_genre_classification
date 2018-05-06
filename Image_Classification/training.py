@@ -10,11 +10,11 @@ train_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_
 validation_data_dir = '/media/balraj/6A2CEF0A2CEECFDD/Acads/SEMESTER_8/EE769_Machine_Learning/Project/Data/Validation/'
 save_training_features_path ='features_train.npy'
 save_validation_features_path = 'features_validation.npy'
-nb_train_samples = 20000    
-nb_validation_samples = 5000
+nb_train_samples = 31216    
+nb_validation_samples = 7798
 top_model_weights_path = 'top_model.h5'
-epochs = 30 							#no of training iteration through top level neural network 
-batch_size = 8
+epochs = 35 							#no of training iteration through top level neural network 
+batch_size = 2
 
 datagen = ImageDataGenerator(rescale=1. / 255)							#starting the imagedatagenerator and normalizing the pixel values
 
@@ -35,15 +35,17 @@ np.save(open(save_validation_features_path, 'wb'),bottleneck_features_validation
 #Now we will train the top_model CNN to classify
 
 train_data = np.load(open(save_training_features_path,'rb'))
-train_labels = np.array([0]*4000 + [1]*4000 + [2]*4000 + [3]*4000 + [4]*4000 )   
+train_labels = np.array([0]*7015 + [1]*3548 + [2]*7390 + [3]*4723+ [4]*8540 )   
 
 validation_data = np.load(open(save_validation_features_path,'rb'))
-validation_labels = np.array([0]*1000 + [1]*1000 +[2]*1000 + [3]*1000 + [4]*1000)
+validation_labels = np.array([0]*1753 + [1]*880 +[2]*1847 + [3]*1180 + [4]*2138)
 
 #creating the top NN for classification - architecture of NN
 top_model = Sequential()
 top_model.add(Flatten(input_shape=train_data.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(128, activation='relu'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(5, activation='softmax'))
 top_model.compile(optimizer='rmsprop',loss='sparse_categorical_crossentropy', metrics=['accuracy'])
